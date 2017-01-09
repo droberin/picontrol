@@ -19,6 +19,11 @@ class PiControl:
         if not self.device:
             print("No device defined, trying default '{}'".format(default_drawer_device))
             self.device = default_drawer_device
+        else:
+            if not self.device.startswith("/dev/"):
+                print("Selected device '{}' is not in /dev/".format(self.device))
+                return False
+
         print("Opening drawer using defined sequence")
 
         if not os.path.isfile(self.device):
