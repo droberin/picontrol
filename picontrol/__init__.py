@@ -1,5 +1,5 @@
 from time import sleep
-
+import os.path
 
 class PiControl:
     device = None
@@ -9,6 +9,7 @@ class PiControl:
 
     def open_drawer(self, sequence=None, drawer_number=1):
         default_drawer_device = "/dev/usb/lp0"
+        status = None
         if not sequence:
             print("No sequence found using default")
             if drawer_number is 1:
@@ -19,7 +20,11 @@ class PiControl:
             print("No device defined, trying default '{}'".format(default_drawer_device))
             self.device = default_drawer_device
         print("Opening drawer using defined sequence")
-        status = False
+
+        if not os.path.isfile(self.device):
+            print("File '{}' not found".format(self.device))
+            return False
+
         try:
             drawer = open(self.device, "wb")
             drawer.write(sequence)
